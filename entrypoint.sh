@@ -8,6 +8,10 @@ wait_for_db() {
 	pass=${MYSQL_PASSWORD}
 	db=${MYSQL_DATABASE:-strichliste}
 
+	if [ -z "$pass" ]; then
+		echo "Error: MYSQL_PASSWORD environment variable is not set or empty"
+		exit 1
+	fi
 	echo "Waiting for database ${host}..."
 	# Try mysql client first (installed in image)
 	until mysql -h "$host" -u"$user" -p"$pass" -e 'SELECT 1' >/dev/null 2>&1; do
