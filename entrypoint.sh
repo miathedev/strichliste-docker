@@ -6,7 +6,6 @@ wait_for_db() {
 	host=${DB_HOST:-strichliste-db}
 	user=${MYSQL_USER:-strichliste}
 	pass=${MYSQL_PASSWORD}
-	db=${MYSQL_DATABASE:-strichliste}
 
 	if [ -z "$pass" ]; then
 		echo "Error: MYSQL_PASSWORD environment variable is not set or empty"
