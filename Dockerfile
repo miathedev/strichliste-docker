@@ -59,4 +59,3 @@ WORKDIR /source/public
 EXPOSE 8080
 
 ENTRYPOINT ["/source/entrypoint.sh"]
-CMD []
