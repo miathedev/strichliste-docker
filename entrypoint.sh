@@ -25,7 +25,9 @@ run_migrations_or_schema() {
 		php /source/bin/console doctrine:migrations:migrate --no-interaction || true
 	else
 		echo "No migrations found, ensuring schema..."
-		php /source/bin/console doctrine:schema:create --no-interaction || true
+		if ! php /source/bin/console doctrine:schema:create --no-interaction; then
+			echo "Warning: Schema creation failed, continuing anyway..."
+		fi
 	fi
 }
 
