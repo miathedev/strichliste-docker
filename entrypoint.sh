@@ -14,7 +14,7 @@ wait_for_db() {
 	fi
 	echo "Waiting for database ${host}..."
 	# Try mysql client first (installed in image)
-	until mysql -h "$host" -u"$user" -p"$pass" -e 'SELECT 1' >/dev/null 2>&1; do
+	until MYSQL_PWD="$pass" mysql -h "$host" -u"$user" -e 'SELECT 1' >/dev/null 2>&1; do
 		sleep 1
 	done
 	echo "Database is available"
