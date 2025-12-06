@@ -39,7 +39,15 @@ run_migrations_or_schema() {
 start_services() {
 	echo "Starting nginx and php-fpm in foreground"
 	nginx -g 'daemon off;' &
-	exec php-fpm81 -F
+	NGINX_PID=$!
+	php-fpm81 -F &
+	PHP_FPM_PID=$!
+
+	# Wait for either process to exit
+	wait -n
+	# If either exits, kill the other and exit
+	kill $NGINX_PID $PHP_FPM_PID 2>/dev/null
+	exit 1
 }
 
 # Main execution
