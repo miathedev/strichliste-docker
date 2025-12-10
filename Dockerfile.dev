@@ -15,7 +15,7 @@ WORKDIR /source
 
 # Clone backend and frontend
 RUN git clone --depth 1 --branch ${BACKEND_REF} https://github.com/strichliste/strichliste-backend.git backend || (echo "Failed to clone backend" && exit 1)
-RUN git clone --depth 1 --branch ${FRONTEND_REF} https://github.com/strichliste/strichliste-web-frontend.git frontend || (echo "Failed to clone frontend" && exit 1)
+RUN git clone --depth 1 --branch ${FRONTEND_REF} https://github.com/miathedev/strichliste-web-frontend.git frontend || (echo "Failed to clone frontend" && exit 1)
 
 # Install backend PHP dependencies (composer)
 WORKDIR /source/backend
@@ -24,7 +24,15 @@ RUN if [ -f composer.json ]; then composer install --no-interaction --no-dev --p
 # Build frontend (yarn/npm)
 WORKDIR /source/frontend
 RUN if [ -f package.json ]; then yarn install --frozen-lockfile --non-interactive || npm install --no-audit --no-fund; fi
-RUN if [ -f package.json ] && ( [ -f yarn.lock ] || [ -f package-lock.json ] ); then NODE_OPTIONS=--openssl-legacy-provider yarn build || NODE_OPTIONS=--openssl-legacy-provider npm run build; fi
+RUN if [ -f package.json ] && ( [ -f yarn.lock ] || [ -f package-lock.json ] ); then \
+      # Prefer invoking react-scripts build directly with node to avoid passing
+      # disallowed flags via NODE_OPTIONS from package scripts.
+      if [ -f node_modules/react-scripts/scripts/build.js ]; then \
+        node --openssl-legacy-provider node_modules/react-scripts/scripts/build.js; \
+      else \
+        NODE_OPTIONS=--openssl-legacy-provider yarn build || NODE_OPTIONS=--openssl-legacy-provider npm run build; \
+      fi; \
+    fi
 
 # Ensure a build directory exists (some frontends write to `build`, others to `dist`),
 # create an empty build dir if not present to avoid later COPY failures.
