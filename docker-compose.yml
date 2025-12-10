@@ -14,12 +14,7 @@ services:
             - default
         env_file:
             - docker.env
-            # Set source github user
-            #- GITHUB_USER_BACKEND=strichliste
-            #- GITHUB_USER_FRONTEND=strichliste
-            # Set branches or tags to build from
-            #- BACKEND_REF=master
-            #- FRONTEND_REF=master
+            
         volumes:
              - ./config/services.yaml:/source/config/services.yaml
              - ./config/strichliste.yaml:/source/config/strichliste.yaml
