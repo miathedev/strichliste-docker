@@ -7,6 +7,8 @@ FROM alpine:3.18.3 as fetch
 
 ARG BACKEND_REF=master
 ARG FRONTEND_REF=master
+ARG GITHUB_USER_FRONTEND=strichliste
+ARG GITHUB_USER_BACKEND=strichliste
 
 RUN apk --no-cache add ca-certificates git curl tar bash nodejs npm yarn shadow unzip \
     php81 php81-cli php81-ctype php81-tokenizer php81-iconv php81-mbstring php81-xml php81-json php81-dom php81-pdo_mysql php81-fpm php81-session php81-sqlite3 php81-pdo_sqlite composer
@@ -14,8 +16,8 @@ RUN apk --no-cache add ca-certificates git curl tar bash nodejs npm yarn shadow 
 WORKDIR /source
 
 # Clone backend and frontend
-RUN git clone --depth 1 --branch ${BACKEND_REF} https://github.com/strichliste/strichliste-backend.git backend || (echo "Failed to clone backend" && exit 1)
-RUN git clone --depth 1 --branch ${FRONTEND_REF} https://github.com/miathedev/strichliste-web-frontend.git frontend || (echo "Failed to clone frontend" && exit 1)
+RUN git clone --depth 1 --branch ${BACKEND_REF} https://github.com/${GITHUB_USER_BACKEND}/strichliste-backend.git backend || (echo "Failed to clone backend" && exit 1)
+RUN git clone --depth 1 --branch ${FRONTEND_REF} https://github.com/${GITHUB_USER_FRONTEND}/strichliste-web-frontend.git frontend || (echo "Failed to clone frontend" && exit 1)
 
 # Install backend PHP dependencies (composer)
 WORKDIR /source/backend
